@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Drinks extends Command {
 
@@ -39,17 +40,15 @@ public class Drinks extends Command {
         Guild guild = event.getGuild();
         TextChannel channel = event.getTextChannel();
         Message message = event.getMessage();
-        Map<String, String> commandData = null;
+        Map<String, String> commandData;
         try {
             commandData = new CommandHandler().getCommandData(guild, message);
             File file = new File("drinks/");
-            List<String> files = new FileUtils().FileScan(file.listFiles());
+            List<String> files = new FileUtils().FileScan(Objects.requireNonNull(file.listFiles()));
             String drinksmsg = new StringUtils().ListToString(files);
             MessageEmbed embed = new EmbedWrapper().EmbedMessage(commandData.get("name"), "Bartender Bot", null, new EmbedWrapper().GetGuildEmbedColor(channel.getGuild()), drinksmsg.replaceAll("_", " "), null, null, null, null);
             channel.sendMessage("Here is what we are serving at " + channel.getGuild().getName() + ":").embed(embed).queue();
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
     }

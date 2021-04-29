@@ -47,10 +47,7 @@ public class Echo extends Command {
             message.delete().queue();
             channel.sendMessage(commandData.get("args")).queue();
             System.out.println(message.getAuthor() + " in guild " + guild.toString() + " in channel " + channel.toString() + " echo'd the message " + commandData.get("args"));
-            return;
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
     }
