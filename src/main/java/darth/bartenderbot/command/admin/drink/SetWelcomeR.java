@@ -38,11 +38,8 @@ public class SetWelcomeR extends Command {
         try {
             if (!new PermCheck().CheckGuildRole(guild, member)) {
                 message.getChannel().sendMessage("That command is staff only!").queue();
-                return;
             }
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
         try {
@@ -52,10 +49,7 @@ public class SetWelcomeR extends Command {
             message.getChannel().sendMessage("Role set to welcome message!").queue();
         } catch (IndexOutOfBoundsException e) {
             message.getChannel().sendMessage("You need to mention a role!").queue();
-            return;
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
     }
