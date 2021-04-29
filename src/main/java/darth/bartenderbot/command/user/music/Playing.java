@@ -10,6 +10,9 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class Playing extends Command {
 
@@ -33,23 +36,15 @@ public class Playing extends Command {
         MessageChannel channel = event.getChannel();
         PlayerManager manager = PlayerManager.getInstance();
         try {
-            Double position = (double) manager.getGuildMusicManager(guild).player.getPlayingTrack().getPosition()/60000;
-            Double duration = (double) manager.getGuildMusicManager(guild).player.getPlayingTrack().getDuration()/60000;
-            channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "The song playing is " + manager.getGuildMusicManager(guild).player.getPlayingTrack().getInfo().title + " (" + Math.round(position * 100.0) / 100.0 +"/"+ Math.round(duration * 100.0) / 100.0 +")", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-            return;
-        } catch (NullPointerException e) {
+            String position = LocalTime.MIDNIGHT.plus(Duration.ofMillis(manager.getGuildMusicManager(guild).player.getPlayingTrack().getPosition())).format(DateTimeFormatter.ofPattern("mm:ss"));
+            String duration = LocalTime.MIDNIGHT.plus(Duration.ofMillis(manager.getGuildMusicManager(guild).player.getPlayingTrack().getDuration())).format(DateTimeFormatter.ofPattern("mm:ss"));
             try {
+                channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "The song playing is " + manager.getGuildMusicManager(guild).player.getPlayingTrack().getInfo().title + " (" + position + "/" + duration + ")", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
+            } catch (NullPointerException e) {
                 channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Nothing is playing!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-            } catch (InvalidConfigurationException ex) {
-                ex.printStackTrace();
-            } catch (IOException ex) {
-                ex.printStackTrace();
             }
-            return;
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException | InvalidConfigurationException ex) {
+            ex.printStackTrace();
         }
     }
 }
