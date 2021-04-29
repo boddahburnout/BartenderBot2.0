@@ -6,12 +6,7 @@ import darth.bartenderbot.command.admin.Emote.AddEmote;
 import darth.bartenderbot.command.admin.Emote.AddEmoteCat;
 import darth.bartenderbot.command.admin.Emote.PreviewEmote;
 import darth.bartenderbot.command.admin.Emote.RenameECat;
-import darth.bartenderbot.command.admin.drink.AddDrink;
-import darth.bartenderbot.command.admin.drink.ListDrinkImages;
-import darth.bartenderbot.command.admin.drink.RemoveDrinkC;
-import darth.bartenderbot.command.admin.drink.RenameDrinkC;
-import darth.bartenderbot.command.admin.drink.SetWelcome;
-import darth.bartenderbot.command.admin.drink.SetWelcomeR;
+import darth.bartenderbot.command.admin.drink.*;
 import darth.bartenderbot.command.admin.tools.Ban;
 import darth.bartenderbot.command.admin.tools.SetRGB;
 import darth.bartenderbot.command.admin.tools.Setbr;
@@ -47,7 +42,7 @@ import javax.security.auth.login.LoginException;
 import java.io.IOException;
 
 public class DiscordBot {
-    public static void main(String[] args) throws LoginException, IOException, InvalidConfigurationException {
+    public static void main(String[] args) throws IOException, InvalidConfigurationException {
         //Check if token was provided
 
         CommandClientBuilder clientBuilder = new CommandClientBuilder();
@@ -93,6 +88,7 @@ public class DiscordBot {
                 new RemoveDrinkC(),
                 new RenameDrinkC(),
                 new AddChatEmote(),
+                new AddDrinkC(),
 
                 new Shutdown()
         );

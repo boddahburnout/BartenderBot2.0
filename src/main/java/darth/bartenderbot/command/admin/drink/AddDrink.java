@@ -49,9 +49,7 @@ public class AddDrink extends Command {
                 channel.sendMessage("That command is staff only!").queue();
                 return;
             }
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
         try {
@@ -67,18 +65,11 @@ public class AddDrink extends Command {
             } else if (!category.isDirectory()) {
                 channel.sendMessage("You must create this category first with !addcat " + commandData.get("args").split(" ")[1]).queue();
             }
-        } catch (FileNotFoundException e) {
-            channel.sendMessage("Image could not be downloaded!").queue();
-            e.printStackTrace();
-            return;
         } catch (IOException e) {
             channel.sendMessage("Image could not be downloaded!").queue();
             e.printStackTrace();
-            return;
         } catch (IndexOutOfBoundsException e) {
             channel.sendMessage("Not enough input! !adddrink <category> <url>").queue();
-            e.printStackTrace();
-            return;
         } catch (InvalidConfigurationException e) {
             e.printStackTrace();
         }
