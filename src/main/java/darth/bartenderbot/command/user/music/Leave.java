@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.VoiceChannel;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Leave extends Command {
 
@@ -33,15 +34,13 @@ public class Leave extends Command {
         Guild guild = event.getGuild();
         MessageChannel channel = event.getChannel();
         // Gets the channel in which the bot is currently connected.
-        VoiceChannel connectedChannel = guild.getSelfMember().getVoiceState().getChannel();
+        VoiceChannel connectedChannel = Objects.requireNonNull(guild.getSelfMember().getVoiceState()).getChannel();
         // Checks if the bot is connected to a voice channel.
         if (connectedChannel == null) {
             // Get slightly fed up at the user.
             try {
                 channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "I am not connected to a voice channel!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-            } catch (InvalidConfigurationException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (InvalidConfigurationException | IOException e) {
                 e.printStackTrace();
             }
             return;
@@ -53,11 +52,8 @@ public class Leave extends Command {
         manager.getGuildMusicManager(guild).player.destroy();
         try {
             channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Disconnected from the voice channel!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
-        return;
     }
 }
