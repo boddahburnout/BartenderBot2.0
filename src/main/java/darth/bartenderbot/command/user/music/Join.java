@@ -39,7 +39,6 @@ public class Join extends Command {
             } catch (InvalidConfigurationException | IOException e) {
                 e.printStackTrace();
             }
-            return;
         }
         VoiceChannel connectedChannel = Objects.requireNonNull(member.getVoiceState()).getChannel();
         if (connectedChannel == null) {
@@ -48,7 +47,6 @@ public class Join extends Command {
             } catch (InvalidConfigurationException | IOException e) {
                 e.printStackTrace();
             }
-            return;
         }
         AudioManager audioManager = guild.getAudioManager();
         audioManager.openAudioConnection(connectedChannel);
