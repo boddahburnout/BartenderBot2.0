@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.managers.AudioManager;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Join extends Command {
 
@@ -35,20 +36,16 @@ public class Join extends Command {
         if (!guild.getSelfMember().hasPermission(channel, Permission.VOICE_CONNECT)) {
             try {
                 channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "I do not have permissions to join a voice channel!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-            } catch (InvalidConfigurationException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (InvalidConfigurationException | IOException e) {
                 e.printStackTrace();
             }
             return;
         }
-        VoiceChannel connectedChannel = member.getVoiceState().getChannel();
+        VoiceChannel connectedChannel = Objects.requireNonNull(member.getVoiceState()).getChannel();
         if (connectedChannel == null) {
             try {
                 channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "You are not connected to a voice channel!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-            } catch (InvalidConfigurationException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (InvalidConfigurationException | IOException e) {
                 e.printStackTrace();
             }
             return;
@@ -58,11 +55,8 @@ public class Join extends Command {
         // Obviously people do not notice someone/something connecting.
         try {
             channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Connected to the voice channel!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
-        return;
     }
 }
