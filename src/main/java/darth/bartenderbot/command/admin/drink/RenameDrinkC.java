@@ -35,16 +35,13 @@ public class RenameDrinkC extends Command {
     protected void execute(CommandEvent event) {
         Guild guild = event.getGuild();
         Message message = event.getMessage();
-        Map<String, String> commandData = null;
+        Map<String, String> commandData;
         Member member = event.getMember();
         try {
             if (!new PermCheck().CheckGuildRole(guild, member)) {
                 message.getChannel().sendMessage("That command is staff only!").queue();
-                return;
             }
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
         try {
@@ -59,9 +56,7 @@ public class RenameDrinkC extends Command {
             } catch (IndexOutOfBoundsException e) {
                 message.getChannel().sendMessage("Not enough input! !renamecat <category>").queue();
             }
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException  | IOException e) {
             e.printStackTrace();
         }
     }
