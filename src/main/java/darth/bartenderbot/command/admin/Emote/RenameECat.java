@@ -41,11 +41,8 @@ public class RenameECat extends Command {
         try {
             if (!new PermCheck().CheckGuildRole(guild, member)) {
                 message.getChannel().sendMessage("That command is staff only!").queue();
-                return;
             }
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException  | IOException e) {
             e.printStackTrace();
         }
         try {
