@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Play extends Command {
 
@@ -47,17 +48,14 @@ public class Play extends Command {
         try {
             Map<String, String> commandData = new CommandHandler().getCommandData(guild, message);
             YamlFile botConfig = new ConfigManager().accessConfig();
-            if (!member.getVoiceState().inVoiceChannel()) {
+            if (!Objects.requireNonNull(member.getVoiceState()).inVoiceChannel()) {
                 message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Join the voice channel first!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-                return;
             }
             if (member.getVoiceState().isDeafened()) {
                 message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Your not even listening your opinion does not matter", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-                return;
             }
-            if (!guild.getSelfMember().getVoiceState().inVoiceChannel()) {
+            if (!Objects.requireNonNull(guild.getSelfMember().getVoiceState()).inVoiceChannel()) {
                 message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Ask me to join the voice channel first!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-                return;
             }
             PlayerManager manager = PlayerManager.getInstance();
             String token = botConfig.getString("Global.Youtube-Token");
@@ -76,9 +74,7 @@ public class Play extends Command {
             manager.loadAndPlay(channel, "https://www.youtube.com/watch?v="+results.get(0).getId().getVideoId());
             manager.getGuildMusicManager(guild).player.setVolume(10);
             return;
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
     }

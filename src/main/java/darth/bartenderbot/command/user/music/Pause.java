@@ -35,11 +35,9 @@ public class Pause extends Command {
         try {
             if (!message.getMember().getVoiceState().inVoiceChannel()) {
                 message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "You aren't even listening smh", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-                return;
             }
             if (!guild.getSelfMember().getVoiceState().inVoiceChannel()) {
                 message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Ask me to join the voice channel first!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-                return;
             }
             PlayerManager player = PlayerManager.getInstance();
             AudioPlayer audioPlayer = player.getGuildMusicManager(guild).player;
@@ -50,10 +48,7 @@ public class Pause extends Command {
                 audioPlayer.setPaused(false);
                 message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Music has been resumed", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
             }
-            return;
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
     }
