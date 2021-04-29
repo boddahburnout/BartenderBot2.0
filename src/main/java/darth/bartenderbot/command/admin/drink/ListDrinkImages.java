@@ -8,7 +8,11 @@ import darth.bartenderbot.permission.PermCheck;
 import darth.bartenderbot.utils.Discord.EmbedWrapper;
 import darth.bartenderbot.utils.FS.FileUtils;
 import darth.bartenderbot.utils.String.StringUtils;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.TextChannel;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.awt.*;
@@ -45,9 +49,7 @@ public class ListDrinkImages extends Command {
                 message.getChannel().sendMessage("That command is staff only!").queue();
                 return;
             }
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException  | IOException e) {
             e.printStackTrace();
         }
         try {
