@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.Message;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Pause extends Command {
 
@@ -33,10 +34,10 @@ public class Pause extends Command {
         Guild guild = event.getGuild();
         Message message = event.getMessage();
         try {
-            if (!message.getMember().getVoiceState().inVoiceChannel()) {
+            if (!Objects.requireNonNull(message.getMember().getVoiceState()).inVoiceChannel()) {
                 message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "You aren't even listening smh", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
             }
-            if (!guild.getSelfMember().getVoiceState().inVoiceChannel()) {
+            if (!Objects.requireNonNull(guild.getSelfMember().getVoiceState()).inVoiceChannel()) {
                 message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Ask me to join the voice channel first!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
             }
             PlayerManager player = PlayerManager.getInstance();
