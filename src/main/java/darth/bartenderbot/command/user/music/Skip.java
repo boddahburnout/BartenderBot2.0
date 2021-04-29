@@ -11,6 +11,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class Skip extends Command {
 
@@ -34,28 +35,22 @@ public class Skip extends Command {
         TextChannel channel = event.getTextChannel();
         Member member = event.getMember();
         try {
-            if (!member.getVoiceState().inVoiceChannel()) {
+            if (!Objects.requireNonNull(member.getVoiceState()).inVoiceChannel()) {
                 channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Join the voice channel first!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-                return;
             }
             if (member.getVoiceState().isDeafened()) {
                 channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Your not even listening your opinion does not matter", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-                return;
             }
-            if (!guild.getSelfMember().getVoiceState().inVoiceChannel()) {
+            if (!Objects.requireNonNull(guild.getSelfMember().getVoiceState()).inVoiceChannel()) {
                 channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Ask me to join the voice channel first!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-                return;
             }
             PlayerManager manager = PlayerManager.getInstance();
             if (manager.getGuildMusicManager(guild).player.getPlayingTrack() == null) {
                 channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "We are cutting you off for tonight, nothing is even playing.", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
-                return;
             }
             channel.sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), manager.getGuildMusicManager(guild).player.getPlayingTrack().getInfo().title + " has been skipped!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
             PlayerManager.getInstance().getGuildMusicManager(guild).scheduler.nextTrack();
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException  | IOException e) {
             e.printStackTrace();
         }
     }

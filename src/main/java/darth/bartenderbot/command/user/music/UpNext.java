@@ -35,6 +35,5 @@ public class UpNext extends Command {
         } catch (InterruptedException | InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
-        return;
     }
 }
