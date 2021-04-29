@@ -37,21 +37,15 @@ public class SetWelcome extends Command {
         try {
             if (!new PermCheck().CheckGuildRole(guild, member)) {
                 channel.sendMessage("That command is staff only!").queue();
-                return;
             }
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException  | IOException e) {
             e.printStackTrace();
         }
         try {
             if (!new PermCheck().CheckGuildRole(guild, member)) {
                 channel.sendMessage("That command is staff only!").queue();
-                return;
             }
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
         try {
@@ -59,9 +53,7 @@ public class SetWelcome extends Command {
             botConfig.set(channel.getGuild().getId() + ".Welcome-Channel", channel.getId());
             botConfig.save();
             channel.sendMessage("Welcome channel set!").queue();
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
     }
