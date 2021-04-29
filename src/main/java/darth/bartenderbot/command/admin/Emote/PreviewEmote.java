@@ -42,11 +42,8 @@ public class PreviewEmote extends Command {
         try {
             if (!new PermCheck().CheckGuildRole(guild, member)) {
                 message.getChannel().sendMessage("That command is staff only!").queue();
-                return;
             }
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException  | IOException e) {
             e.printStackTrace();
         }
         try {
@@ -56,7 +53,6 @@ public class PreviewEmote extends Command {
             channel.sendMessage("Here is the file: " + image.getName() + " from emote " + file.getName()).addFile(image).queue();
         } catch (NullPointerException e) {
             channel.sendMessage("File was not found!").queue();
-            return;
         } catch (IndexOutOfBoundsException | InvalidConfigurationException | IOException e) {
             channel.sendMessage("Please specify an emote and file name!").queue();
         }
