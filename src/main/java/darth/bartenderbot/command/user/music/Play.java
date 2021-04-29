@@ -61,19 +61,19 @@ public class Play extends Command {
             String token = botConfig.getString("Global.Youtube-Token");
             HttpTransport transport = new NetHttpTransport();
             JsonFactory jsonFactory = new JacksonFactory();
-            YouTube youTube = new YouTube( transport, jsonFactory , null);
-            YouTube.Search search1 = youTube.search();
+            //YouTube youTube = new YouTube( transport, jsonFactory , null);
+            YouTube.Builder youtube = new YouTube.Builder(transport, jsonFactory, null).setApplicationName("Bartender Bot");
+            YouTube.Search search1 = youtube.build().search();
             List<String> test = new ArrayList<>();
             test.add("snippet");
             List <SearchResult> results = search1.list(test).setQ(commandData.get("args")).setKey(token).execute().getItems();
             StringBuilder sb = new StringBuilder();
-            for (SearchResult r : results) {
-                sb.append(r.getSnippet().getTitle()+" "+r.getId().getVideoId()+"\n\n");
-            }
-            message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage("Search Results", null, null, new EmbedWrapper().GetGuildEmbedColor(guild), sb.toString(), null, null, message.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
+            //for (SearchResult r : results) {
+            //    sb.append(r.getSnippet().getTitle()+" "+r.getId().getVideoId()+"\n\n");
+            //}
+            //message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage("Search Results", null, null, new EmbedWrapper().GetGuildEmbedColor(guild), sb.toString(), null, null, message.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
             manager.loadAndPlay(channel, "https://www.youtube.com/watch?v="+results.get(0).getId().getVideoId());
             manager.getGuildMusicManager(guild).player.setVolume(10);
-            return;
         } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
