@@ -50,12 +50,15 @@ public class Play extends Command {
             YamlFile botConfig = new ConfigManager().accessConfig();
             if (!Objects.requireNonNull(member.getVoiceState()).inVoiceChannel()) {
                 message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Join the voice channel first!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
+                return;
             }
             if (member.getVoiceState().isDeafened()) {
                 message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Your not even listening your opinion does not matter", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
+                return;
             }
             if (!Objects.requireNonNull(guild.getSelfMember().getVoiceState()).inVoiceChannel()) {
                 message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(guild.getJDA().getSelfUser().getName(), null, null, new EmbedWrapper().GetGuildEmbedColor(guild), "Ask me to join the voice channel first!", null, null, guild.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
+                return;
             }
             PlayerManager manager = PlayerManager.getInstance();
             String token = botConfig.getString("Global.Youtube-Token");
