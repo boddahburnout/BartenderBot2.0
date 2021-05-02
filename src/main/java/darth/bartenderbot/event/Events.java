@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.json.simple.parser.ParseException;
 
 import org.simpleyaml.exceptions.InvalidConfigurationException;
@@ -23,17 +24,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class Events extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
         //Handle messages here
         Guild guild = event.getGuild();
+        Message message = event.getMessage();
         new GuildJoinHandler().appendGuild(guild);
 
-//            if (message.isMentioned(event.getJDA().getSelfUser())) {
-//                new MentionedHandler().sendprefix(guild, message);
-//            }
+            if (message.isMentioned(event.getJDA().getSelfUser())) {
+                new MentionedHandler().sendprefix(guild, message);
+            }
 
 //            try {
 //                List<String> emotes = new FileUtils().FileScan(new File("emotes/").listFiles());
@@ -61,9 +64,7 @@ public class Events extends ListenerAdapter {
         Member member = event.getMember();
         try {
             new GuildMemberJoinHandler().welcomeMember(guild, member);
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -74,23 +75,20 @@ public class Events extends ListenerAdapter {
     }
 
     @Override
-    public void onMessageReactionAdd(MessageReactionAddEvent event) {
+    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
         new BlackJack().reactHandler(event.getGuild(), event);
     }
 
     @Override
     public void onGuildVoiceLeave(GuildVoiceLeaveEvent event) {
-        if (event.getGuild().getSelfMember().getVoiceState().inVoiceChannel()) {
+        if (Objects.requireNonNull(event.getGuild().getSelfMember().getVoiceState()).inVoiceChannel()) {
             VoiceChannel vc = event.getGuild().getSelfMember().getVoiceState().getChannel();
+            assert vc != null;
             if (vc.getMembers().size() == 1) {
                 event.getGuild().getAudioManager().closeAudioConnection();
                 PlayerManager manager = PlayerManager.getInstance();
                 manager.getGuildMusicManager(event.getGuild()).player.destroy();
             }
         }
-    }
-    @Override
-    public void onStatusChange(StatusChangeEvent event) {
-
     }
 }

@@ -1,9 +1,7 @@
 package darth.bartenderbot.handler;
 
-import darth.bartenderbot.config.ConfigManager;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
-import org.simpleyaml.configuration.file.YamlFile;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.io.IOException;
@@ -28,9 +26,7 @@ public class MentionedHandler {
             }
         try {
             new CleverbotHandler().sendRequest(guild, "697355371056201858", channel, message, member, jda.getRoles());
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
     }
