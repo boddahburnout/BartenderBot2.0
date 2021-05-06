@@ -30,6 +30,7 @@ import darth.bartenderbot.command.user.useful.Invite;
 import darth.bartenderbot.command.user.useful.Ping;
 import darth.bartenderbot.command.user.useful.Status;
 import darth.bartenderbot.config.ConfigManager;
+import darth.bartenderbot.event.Events;
 import darth.bartenderbot.utils.FS.FileUtils;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -103,7 +104,7 @@ public class DiscordBot {
         //Builds the bot and logs in
         try {
             JDA jda = JDABuilder.createDefault(token)
-                    .addEventListeners(clientBuilder.build())
+                    .addEventListeners(clientBuilder.build(), new Events())
                     .enableIntents(GatewayIntent.GUILD_MEMBERS)
                     .build();
             System.out.println(jda.getSelfUser().getName() + " Logged in!");

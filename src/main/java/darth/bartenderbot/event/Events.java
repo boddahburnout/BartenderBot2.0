@@ -1,14 +1,12 @@
 package darth.bartenderbot.event;
 
 import darth.bartenderbot.Games.BlackJack;
-import darth.bartenderbot.command.*;
 import darth.bartenderbot.handler.*;
-import darth.bartenderbot.permission.PermCheck;
-import darth.bartenderbot.utils.Discord.EmbedWrapper;
 import darth.bartenderbot.utils.FS.FileUtils;
+import darth.bartenderbot.utils.Image.ImageUtils;
 import darth.bartenderbot.utils.MusicPlayer.PlayerManager;
+import darth.bartenderbot.utils.String.RandomPhrase;
 import net.dv8tion.jda.api.entities.*;
-import net.dv8tion.jda.api.events.StatusChangeEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
@@ -16,14 +14,11 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.parser.ParseException;
 
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 public class Events extends ListenerAdapter {
@@ -32,8 +27,9 @@ public class Events extends ListenerAdapter {
         //Handle messages here
         Guild guild = event.getGuild();
         Message message = event.getMessage();
-        new GuildJoinHandler().appendGuild(guild);
 
+        System.out.println(new RandomPhrase().getRandomJoinPhrase(event.getAuthor()));
+        new GuildJoinHandler().appendGuild(guild);
             if (message.isMentioned(event.getJDA().getSelfUser())) {
                 new MentionedHandler().sendprefix(guild, message);
             }
