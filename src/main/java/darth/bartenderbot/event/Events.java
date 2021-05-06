@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
+import org.json.simple.parser.ParseException;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.io.File;
@@ -29,7 +30,7 @@ public class Events extends ListenerAdapter {
         Message message = event.getMessage();
 
         //System.out.println(new RandomPhrase().getRandomJoinPhrase(event.getAuthor()));
-        new GuildJoinHandler().appendGuild(guild);
+//        new GuildJoinHandler().appendGuild(guild);
             if (message.isMentioned(event.getJDA().getSelfUser())) {
                 new MentionedHandler().sendprefix(guild, message);
             }
@@ -60,15 +61,15 @@ public class Events extends ListenerAdapter {
         Member member = event.getMember();
         try {
             new GuildMemberJoinHandler().welcomeMember(guild, member);
-        } catch (InvalidConfigurationException | IOException e) {
+        } catch (InvalidConfigurationException | IOException | ParseException e) {
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void onGuildJoin(GuildJoinEvent event) {
-        new GuildJoinHandler().appendGuild(event.getGuild());
-    }
+//    @Override
+//    public void onGuildJoin(GuildJoinEvent event) {
+//        new GuildJoinHandler().appendGuild(event.getGuild());
+//    }
 
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {

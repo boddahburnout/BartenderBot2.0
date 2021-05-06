@@ -1,10 +1,14 @@
 package darth.bartenderbot.utils.String;
 
+import darth.bartenderbot.config.ConfigManager;
 import darth.cocktailapi.CocktailApi;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
+import org.simpleyaml.configuration.file.YamlFile;
+import org.simpleyaml.exceptions.InvalidConfigurationException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,21 +17,24 @@ import java.util.Random;
 
 public class RandomPhrase {
     private String[] phrase;
- //   private String phrase;
- //   public String getRandomJoinPhrase(User user) {
- //       File drink = new FileUtils().GetRandomFile(new File("drinks/"));
- //       Random random = new Random();
- //       List<String> JoinPhrases = new ArrayList<>();
- //       JoinPhrases.add("Here’s yer %drink% %user%! Cheers!");
- //       JoinPhrases.add("%user%, One %drink% on the house! As always!");
- //       JoinPhrases.add("*Slides %drink% down the counter* Enjoy your drink, %user%!");
- //       int phraseindex = random.nextInt(JoinPhrases.size());
- //       phrase = JoinPhrases.get(phraseindex);
- //       phrase = phrase.replaceAll("%drink%", drink.getName().replaceAll("_", " "));
- //       phrase = phrase.replaceAll("%user%", user.getName());
- //       return phrase;
- //   }
-    public String[] getRandomServe0 (User user) throws IOException, ParseException {
+    public String[] getRandomJoinPhrase(Guild guild, User user) throws IOException, ParseException, InvalidConfigurationException {
+        phrase = new String[2];
+        YamlFile botConfig = new ConfigManager().accessConfig();
+        CocktailApi cocktailApi = new CocktailApi();
+        Random random = new Random();
+        JSONArray randomDrinks = cocktailApi.getRandomDrink();
+        JSONObject drink = (JSONObject) randomDrinks.get(0);
+        List<String> JoinPhrases = new ArrayList<>();
+        JoinPhrases.add("Welcome %user% to %guild% have some %drink% on the house! Make our new friend comfortable!");
+        int phraseindex = random.nextInt(JoinPhrases.size());
+        phrase [0] = JoinPhrases.get(phraseindex);
+        phrase [0] = phrase [0].replaceAll("%drink%", cocktailApi.getName(drink).toString());
+        phrase [0] = phrase [0].replaceAll("%user%", user.getName());
+        phrase [0] = phrase [0].replaceAll("%guild%", guild.getName());
+        phrase [1] = cocktailApi.getThumb(drink).toString();
+        return phrase;
+    }
+    public String[] getRandomServe (User user) throws IOException, ParseException {
         Random random = new Random();
         phrase = new String[2];
         CocktailApi cocktailApi = new CocktailApi();
@@ -44,7 +51,7 @@ public class RandomPhrase {
         phrase [1] = cocktailApi.getThumb(drink).toString();
         return phrase;
     }
-    public String[] getRandomServe1(User user, String userdrink) throws IOException, ParseException {
+    public String[] getServe(User user, String userdrink) throws IOException, ParseException {
         CocktailApi cocktailApi = new CocktailApi();
         phrase = new String[2];
         JSONArray Drinks = cocktailApi.getDrinkByName(userdrink);
