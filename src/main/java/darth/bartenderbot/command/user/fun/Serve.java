@@ -50,21 +50,14 @@ public class Serve extends Command {
             commandData = new CommandHandler().getCommandData(guild, message);
             if (commandData.get("args").split(" ")[0].isEmpty()) { // No arguments no problem, everyone gets a drink!
                 try {
-                    //File Category = new FileUtils().GetRandomFile(new File("drinks/"));
-                    //File Image = new FileUtils().GetRandomImage(Category);
-                    //MessageEmbed embeded = new EmbededBuilder().EmbedMessage("test", "", Color.BLUE, "Since any drink will do, have some " + Category.getName().replaceAll("_", " "), null, null, null,  new File(Category.getAbsolutePath()).toURI().toURL().toString()+Image.getName());
-                    //message.getChannel().sendMessage("Since any drink will do, have some " + Category.getName().replaceAll("_", " ")).addFile(Image).queue();
-                    //    channel.sendMessage("Test").embed(embeded).queue();
-                    CocktailApi cocktailApi = new CocktailApi();
-                    JSONArray randomdrink = cocktailApi.getRandomDrink();
-                    JSONObject drink1 = (JSONObject) randomdrink.get(0);
+                    String[] drink = new RandomPhrase().getRandomServe0(event.getAuthor());
                     Color color = Color.BLUE;
                     try {
                         color = new EmbedWrapper().GetGuildEmbedColor(guild);
                     } catch (InvalidConfigurationException | IOException e) {
                         e.printStackTrace();
                     }
-                    event.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(event.getGuild().getJDA().getSelfUser().getName() + " served a drink to " + event.getAuthor().getName(), "", "", color, new RandomPhrase().getRandomServe0(event.getAuthor()), null, null, null, cocktailApi.getThumb(drink1).toString())).queue();
+                    event.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(event.getGuild().getJDA().getSelfUser().getName() + " served a drink to " + event.getAuthor().getName(), "", "", color, drink[0], null, null, null, drink[1])).queue();
                 } catch (IllegalArgumentException | ParseException e) {
                     e.printStackTrace();
                     message.getChannel().sendMessage("Please add some drinks first!").queue();
@@ -76,21 +69,32 @@ public class Serve extends Command {
                 if (!mention.isEmpty()) {
                     try {
                         List<User> user = message.getMentionedUsers();
-                        File category = new FileUtils().GetDrinkByString(commandData.get("args").split(" ")[0].trim().replace(" ", "_"));
-                        File Image = new FileUtils().GetRandomImage(category);
-                        message.getChannel().sendMessage(message.getAuthor().getAsMention() + " ordered " + user.get(0).getAsMention() + " " + category.getName().replaceAll("_", " ") + "!").addFile(Image).queue();
+                        String args =  event.getArgs();
+                        for (User u : user) {
+                            args = args.replaceAll("<@!"+u.getId()+">", "").trim();
+                            args = args.replaceAll("<@"+u.getId()+">", "").trim();
+                        }
+                        Color color = Color.BLUE;
+                        try {
+                            color = new EmbedWrapper().GetGuildEmbedColor(guild);
+                        } catch (InvalidConfigurationException | IOException e) {
+                            e.printStackTrace();
+                        }
+                        String[] drink = new RandomPhrase().getRandomServe1(event.getAuthor(), args);
+                        message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(event.getAuthor().getName() + " served a drink to " + user.get(0).getName(), "", "", color, drink[0], null, null, null, drink[1])).queue();
                         return;
-                    } catch (NullPointerException e1) {
+                     } catch (NullPointerException e1) {
                         message.getChannel().sendMessage("We do not serve " + commandData.get("args").trim() + " here at " + guild.getName()).queue();
-                    }
+                        }
                 } else {
+                    String[] drink = new RandomPhrase().getRandomServe1(event.getAuthor(), event.getArgs());
+                    Color color = Color.BLUE;
                     try {
-                        File category = new FileUtils().GetDrinkByString(commandData.get("args").trim().replace(" ", "_"));
-                        File Image = new FileUtils().GetRandomImage(category);
-                        message.getChannel().sendMessage("Here is some " + commandData.get("args").trim() + " on the house!").addFile(Image).queue();
-                    } catch (NullPointerException e2) {
-                        message.getChannel().sendMessage("We do not serve " + commandData.get("args").trim() + " here at " + guild.getName()).queue();
+                        color = new EmbedWrapper().GetGuildEmbedColor(guild);
+                    } catch (InvalidConfigurationException | IOException e) {
+                        e.printStackTrace();
                     }
+                    message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(event.getGuild().getJDA().getSelfUser().getName() + " served a drink to " + event.getAuthor().getName(), "", "", color, drink[0], null, null, null, drink[1])).queue();
                 }
             } catch (Exception e) {
                 e.printStackTrace();

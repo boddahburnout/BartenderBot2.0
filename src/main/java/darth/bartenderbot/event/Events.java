@@ -28,7 +28,7 @@ public class Events extends ListenerAdapter {
         Guild guild = event.getGuild();
         Message message = event.getMessage();
 
-        System.out.println(new RandomPhrase().getRandomJoinPhrase(event.getAuthor()));
+        //System.out.println(new RandomPhrase().getRandomJoinPhrase(event.getAuthor()));
         new GuildJoinHandler().appendGuild(guild);
             if (message.isMentioned(event.getJDA().getSelfUser())) {
                 new MentionedHandler().sendprefix(guild, message);
