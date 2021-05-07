@@ -13,11 +13,7 @@ import darth.bartenderbot.command.admin.tools.Setbr;
 import darth.bartenderbot.command.admin.tools.Shutdown;
 import darth.bartenderbot.command.admin.tools.TestJoin;
 import darth.bartenderbot.command.admin.tools.Unban;
-import darth.bartenderbot.command.user.fun.Drinks;
-import darth.bartenderbot.command.user.fun.Echo;
-import darth.bartenderbot.command.user.fun.Mtg;
-import darth.bartenderbot.command.user.fun.Serve;
-import darth.bartenderbot.command.user.fun.Strain;
+import darth.bartenderbot.command.user.fun.*;
 import darth.bartenderbot.command.user.music.Join;
 import darth.bartenderbot.command.user.music.Leave;
 import darth.bartenderbot.command.user.music.Pause;
@@ -66,6 +62,7 @@ public class DiscordBot {
                 new PreviewEmote(),
                 new Serve(),
                 new ListDrinkImages(),
+                new GrowInfo(),
 
                 new Join(),
                 new Leave(),
