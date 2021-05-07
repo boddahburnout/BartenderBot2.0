@@ -6,6 +6,7 @@ import darth.bartenderbot.command.category.BotCategories;
 import darth.bartenderbot.utils.Discord.EmbedWrapper;
 import darth.leaflyapi.LeaflySearch;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
@@ -19,6 +20,7 @@ public class GrowInfo extends Command {
         this.name = "growi";
         this.category = new BotCategories().UserCat();
         this.help = "Find grow info on strains";
+        this.guildOnly = false;
     }
 
     /**
@@ -32,7 +34,7 @@ public class GrowInfo extends Command {
     @Override
     protected void execute(CommandEvent event) {
         LeaflySearch leaflySearch = new LeaflySearch();
-        Guild guild = event.getGuild();
+        Message message = event.getMessage();
         JSONObject strain;
         try {
             strain = leaflySearch.fechLeafly(event.getArgs());
@@ -47,11 +49,22 @@ public class GrowInfo extends Command {
             }
             Color color = Color.BLUE;
             try {
+                Guild guild = event.getGuild();
                 color = new EmbedWrapper().GetGuildEmbedColor(guild);
-            } catch (InvalidConfigurationException | IOException e) {
-                e.printStackTrace();
+            } catch (InvalidConfigurationException | IOException | IllegalStateException e) {
+
             }
-            event.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(leaflySearch.getStrainName(strain).toString() + "grow info", "", "", color,  growInfo.get("growNotesPlain")+"\n\n"+sb.toString(), null, null, event.getJDA().getSelfUser().getEffectiveAvatarUrl(), null)).queue();
+            String thumb;
+            if (leaflySearch.getNugImage(strain) == null) {
+                if (leaflySearch.getSymbol(strain) != null) {
+                    thumb = strain.get("flowerImagePng").toString();
+                } else {
+                    thumb = null;
+                }
+            } else {
+                thumb = leaflySearch.getNugImage(strain).toString();
+            }
+            message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(leaflySearch.getStrainName(strain).toString() + "grow info", "", "", color,  growInfo.get("growNotesPlain")+"\n\n"+sb.toString(), null, null, thumb, null)).queue();
         } catch (ParseException | IOException e) {
             e.printStackTrace();
         }

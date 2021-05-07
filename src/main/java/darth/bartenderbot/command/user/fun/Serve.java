@@ -94,9 +94,7 @@ public class Serve extends Command {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } catch (InvalidConfigurationException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+        } catch (InvalidConfigurationException | IOException e) {
             e.printStackTrace();
         }
     }

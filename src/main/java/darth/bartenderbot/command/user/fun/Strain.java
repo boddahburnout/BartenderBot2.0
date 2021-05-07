@@ -6,7 +6,6 @@ import darth.bartenderbot.command.category.BotCategories;
 import darth.bartenderbot.utils.Discord.EmbedWrapper;
 import darth.bartenderbot.utils.String.StringUtils;
 import darth.leaflyapi.LeaflySearch;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
@@ -22,6 +21,7 @@ public class Strain extends Command {
         this.category = new BotCategories().UserCat();
         this.help = "Look up an overview on a strains data";
         this.arguments = "<Strain>";
+        this.guildOnly = false;
     }
 
     /**
@@ -44,23 +44,27 @@ public class Strain extends Command {
         Color color = Color.BLUE;
         try {
              color = new EmbedWrapper().GetGuildEmbedColor(event.getGuild());
-        } catch (InvalidConfigurationException | IOException e) {
+        } catch (InvalidConfigurationException | IOException | IllegalStateException e) {
 
         }
         try {
             JSONObject strain = leaflyApi.fechLeafly(message);
-            try {
-            channel.sendMessage(new EmbedWrapper().EmbedMessage(leaflyApi.getStrainName(strain).toString(), null, "", color, new StringUtils().FormatWeedData(strain), null, null, leaflyApi.getNugImage(strain).toString(), null)).queue();
-        } catch (NullPointerException e) {
-            channel.sendMessage(new EmbedWrapper().EmbedMessage(leaflyApi.getStrainName(strain).toString(), null, "", color, new StringUtils().FormatWeedData(strain), null, null, null, null)).queue();
-        }
+            String thumb;
+            if (leaflyApi.getNugImage(strain) == null) {
+                if (leaflyApi.getSymbol(strain) != null) {
+                    thumb = strain.get("flowerImagePng").toString();
+                } else {
+                    thumb = null;
+                }
+            } else {
+                thumb = leaflyApi.getNugImage(strain).toString();
+            }
+            channel.sendMessage(new EmbedWrapper().EmbedMessage(leaflyApi.getStrainName(strain).toString(), null, "", color, new StringUtils().FormatWeedData(strain), null, null, thumb, null)).queue();
         } catch (ParseException e) {
             channel.sendMessage("Couldn't locate data!").queue();
-            return;
         } catch (NullPointerException | IOException e) {
             channel.sendMessage("Couldn't find strain info").queue();
             e.printStackTrace();
-            return;
         }
     }
 }

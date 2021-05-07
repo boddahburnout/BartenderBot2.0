@@ -12,13 +12,14 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 import org.simpleyaml.exceptions.InvalidConfigurationException;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Map;
 
 public class Mtg extends Command {
 
     public Mtg() {
-        this.guildOnly = true;
+        this.guildOnly = false;
         this.help = "Look up a Magic the Gathering Card";
         this.name = "mtg";
         this.category = new BotCategories().UserCat();
@@ -34,14 +35,11 @@ public class Mtg extends Command {
      */
     @Override
     protected void execute(CommandEvent event) {
-        Guild guild = event.getGuild();
         Message message = event.getMessage();
-        Map<String, String> commandData = null;
         try {
-            commandData = new CommandHandler().getCommandData(guild, message);
             ScryfallAPI scryfallAPI = new ScryfallAPI();
-            JSONObject apiResp = null;
-            apiResp = scryfallAPI.scryfallRequest(commandData.get("args"));
+            JSONObject apiResp;
+            apiResp = scryfallAPI.scryfallRequest(event.getArgs());
             JSONObject images = scryfallAPI.getImageUrls(apiResp);
             JSONObject prices = scryfallAPI.getPrices(apiResp);
             JSONObject legal = scryfallAPI.getLegalities(apiResp);
@@ -70,10 +68,16 @@ public class Mtg extends Command {
                 sb.append("Historic: " + scryfallAPI.getHistoric(legal).toString().replaceAll("_", " ") + "\n");
             }
 
-            message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(scryfallAPI.getCardName(apiResp).toString(), null, scryfallAPI.getGathererUrl(scryfallAPI.getRelatedUrl(apiResp)).toString(), new EmbedWrapper().GetGuildEmbedColor(guild), sb.toString(), null, null, message.getJDA().getSelfUser().getEffectiveAvatarUrl(), scryfallAPI.getSmallImage(images).toString())).queue();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ParseException | InvalidConfigurationException e) {
+            Color color = Color.BLUE;
+            try {
+                color = new EmbedWrapper().GetGuildEmbedColor(event.getGuild());
+            } catch (InvalidConfigurationException | IOException | IllegalStateException e) {
+
+            }
+
+            message.getChannel().sendMessage(new EmbedWrapper().EmbedMessage(scryfallAPI.getCardName(apiResp).toString(), null, scryfallAPI.getGathererUrl(scryfallAPI.getRelatedUrl(apiResp)).toString(), color, sb.toString(), null, null, message.getJDA().getSelfUser().getEffectiveAvatarUrl(), scryfallAPI.getSmallImage(images).toString())).queue();
+
+        } catch (IOException | ParseException e) {
             e.printStackTrace();
         }
     }

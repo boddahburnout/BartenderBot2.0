@@ -63,6 +63,7 @@ public class DiscordBot {
                 new Serve(),
                 new ListDrinkImages(),
                 new GrowInfo(),
+                new ViewCard(),
 
                 new Join(),
                 new Leave(),
